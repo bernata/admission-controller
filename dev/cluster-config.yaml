@@ -1,0 +1,10 @@
+# Define k8s control plane cluster
+# https://kind.sigs.k8s.io/docs/user/quick-start#setting-kubernetes-version
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+runtimeConfig:
+  "admissionregistration.k8s.io/v1": "true"
+  "admissionregistration.k8s.io/v1beta1": "true"
+nodes:
+  - role: control-plane
+    image: kindest/node:v1.22.13

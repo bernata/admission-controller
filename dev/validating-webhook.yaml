@@ -1,0 +1,27 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: demo.admission-controller.com
+webhooks:
+  - name: demo.admission-controller.com
+    sideEffects: None
+    failurePolicy: Fail
+    rules:
+      - apiGroups:   ["*"]
+        apiVersions: ["*"]
+        operations:  ["CREATE", "UPDATE"]
+        resources:   ["pods", "deployments"]
+        scope:       "*"
+    clientConfig:
+      url: https://host.docker.internal:8443/v1/validate
+      caBundle: ${CA_PEM_BASE64}
+    admissionReviewVersions: ["v1", "v1beta1"]
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: In
+          values:
+            - demo
+    objectSelector:
+      matchLabels:
+        app.kubernetes.io/managed-by: demo
